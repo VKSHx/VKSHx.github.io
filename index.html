@@ -254,9 +254,11 @@
       font-size: 2.8rem;
       flex-shrink: 0;
     }
-    .thumb-tech    { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); }
-    .thumb-blog    { background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 100%); }
-    .thumb-finance { background: linear-gradient(135deg, #0d1b2a 0%, #1a4a73 100%); }
+    .thumb-tech      { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); }
+    .thumb-blog      { background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 100%); }
+    .thumb-finance   { background: linear-gradient(135deg, #0d1b2a 0%, #1a4a73 100%); }
+    .thumb-ai-bubble { background: linear-gradient(135deg, #0a1a0e 0%, #14532d 100%); }
+    .thumb-remote    { background: linear-gradient(135deg, #fdf4ff 0%, #a855f7 100%); }
 
     .card-body { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; }
 
@@ -375,7 +377,7 @@
   </div>
   <h1>When webpages <span>hijack</span> your AI assistant</h1>
   <p class="hero-sub">
-    Three real-looking articles that demonstrate how hidden instructions embedded in
+    Five real-looking articles that demonstrate how hidden instructions embedded in
     web content can silently redirect an LLM — and how a guardrail agent catches them
     before any damage is done.
   </p>
@@ -425,7 +427,7 @@
 <section class="articles" id="articles">
   <div class="articles-header">
     <div class="section-label">Demo pages</div>
-    <h2>Three articles — three outcomes</h2>
+    <h2>Five articles — five outcomes</h2>
     <p>Each page is a realistic-looking article. Fetch any of them through the Guardrail demo to see the scanner in action.</p>
   </div>
 
@@ -494,6 +496,49 @@
       </div>
     </a>
 
+
+    <!-- AI Bubble — blocked -->
+    <a class="card" href="ai-bubble.html" target="_blank" rel="noopener">
+      <div class="card-thumb thumb-ai-bubble">📉</div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="verdict-tag verdict-block">✕ block</span>
+          <span class="card-source-tag">FinanceTech Review</span>
+        </div>
+        <h3>The AI Investment Bubble: Myth or Reality?</h3>
+        <p>A finance analysis article with a jailbreak payload hidden inside a zero-height "analytics log" div — base64-encoded to evade naive string matching. Guardrail decodes and blocks it.</p>
+      </div>
+      <div class="card-footer">
+        <span>7 min read · James Okonkwo</span>
+        <span class="read-link">Read
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Remote Work — safe -->
+    <a class="card" href="remote-work.html" target="_blank" rel="noopener">
+      <div class="card-thumb thumb-remote">🏠</div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="verdict-tag verdict-safe">✓ pass</span>
+          <span class="card-source-tag">Work Forward</span>
+        </div>
+        <h3>The Remote Work Revolution: Two Years On</h3>
+        <p>A clean opinion piece on hybrid work trends — no injection payload. Guardrail passes it through and the LLM summarises it faithfully.</p>
+      </div>
+      <div class="card-footer">
+        <span>6 min read · Sarah Chen</span>
+        <span class="read-link">Read
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
   </div>
 </section>
 
@@ -514,6 +559,8 @@
     <a href="tech-article.html">Clean article</a>
     <a href="blog-post.html">Poisoned blog</a>
     <a href="newsletter.html">Subtle injection</a>
+    <a href="ai-bubble.html">Base64 jailbreak</a>
+    <a href="remote-work.html">Clean article 2</a>
   </div>
 </footer>
 
