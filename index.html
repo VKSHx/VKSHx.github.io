@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prompt Injection Demo — AI Security Research</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0f0f0f;
+      --ink-2: #333;
+      --ink-3: #666;
+      --ink-4: #999;
+      --border: #e8e5e0;
+      --bg: #faf9f7;
+      --surface: #fff;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --safe: #16a34a;
+      --safe-bg: #f0fdf4;
+      --safe-border: #bbf7d0;
+      --flag: #d97706;
+      --flag-bg: #fffbeb;
+      --flag-border: #fde68a;
+      --block: #dc2626;
+      --block-bg: #fef2f2;
+      --block-border: #fecaca;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250, 249, 247, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: "Sora", sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-brand-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.82rem;
+    }
+    .nav-right a { color: var(--ink-3); text-decoration: none; transition: color 0.15s; }
+    .nav-right a:hover { color: var(--ink); }
+    .nav-badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 6rem 2rem 5rem;
+      text-align: center;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      border: 1px solid #bfdbfe;
+    }
+    .pulse {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+    .hero h1 {
+      font-family: "Sora", sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--ink-3);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.65;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 24px;
+      border-radius: 10px;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .hero-cta:hover { background: #222; transform: translateY(-1px); }
+    .hero-cta svg { opacity: 0.7; }
+
+    /* ── How it works ── */
+    .how {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 2rem;
+    }
+    .how-inner { max-width: 900px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .how-inner h2 {
+      font-family: "Sora", sans-serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.6rem;
+    }
+    .how-inner > p {
+      font-size: 0.95rem;
+      color: var(--ink-3);
+      max-width: 580px;
+      margin-bottom: 2.5rem;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .step {
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--bg);
+    }
+    .step-num {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .step h3 { font-size: 0.9rem; font-weight: 600; color: var(--ink); margin-bottom: 0.35rem; }
+    .step p { font-size: 0.82rem; color: var(--ink-3); line-height: 1.55; }
+
+    /* ── Articles ── */
+    .articles {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 4.5rem 2rem 6rem;
+    }
+    .articles-header { margin-bottom: 2rem; }
+    .articles-header h2 {
+      font-family: "Sora", sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .articles-header p { font-size: 0.88rem; color: var(--ink-3); }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+      border-color: #d0ccc6;
+    }
+
+    .card-thumb {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      flex-shrink: 0;
+    }
+    .thumb-tech    { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); }
+    .thumb-blog    { background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 100%); }
+    .thumb-finance { background: linear-gradient(135deg, #0d1b2a 0%, #1a4a73 100%); }
+
+    .card-body { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; }
+
+    .card-tags { display: flex; align-items: center; gap: 6px; margin-bottom: 0.75rem; }
+
+    .verdict-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid;
+    }
+    .verdict-safe    { background: var(--safe-bg);  color: var(--safe);  border-color: var(--safe-border); }
+    .verdict-flag    { background: var(--flag-bg);  color: var(--flag);  border-color: var(--flag-border); }
+    .verdict-block   { background: var(--block-bg); color: var(--block); border-color: var(--block-border); }
+
+    .card-source-tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--ink-4);
+      background: #f4f4f0;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+
+    .card-body h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.01em;
+    }
+    .card-body p {
+      font-size: 0.83rem;
+      color: var(--ink-3);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.4rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--ink-4);
+    }
+    .read-link {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.78rem;
+    }
+
+    /* ── Info banner ── */
+    .info-banner {
+      max-width: 900px;
+      margin: 0 auto 4rem;
+      padding: 0 2rem;
+    }
+    .info-inner {
+      background: #f8faff;
+      border: 1px solid #dbeafe;
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.85rem;
+      color: #1e40af;
+      line-height: 1.55;
+    }
+    .info-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--ink-4);
+    }
+    footer a { color: var(--ink-3); text-decoration: none; }
+    footer a:hover { color: var(--ink); }
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-brand-dot"></div>
+    VKSHx · Security Research
+  </a>
+  <div class="nav-right">
+    <a href="#articles">Articles</a>
+    <a href="#how-it-works">How it works</a>
+    <span class="nav-badge">AI Safety</span>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <div class="pulse"></div>
+    Indirect Prompt Injection · Educational Research
+  </div>
+  <h1>When webpages <span>hijack</span> your AI assistant</h1>
+  <p class="hero-sub">
+    Three real-looking articles that demonstrate how hidden instructions embedded in
+    web content can silently redirect an LLM — and how a guardrail agent catches them
+    before any damage is done.
+  </p>
+  <a href="#articles" class="hero-cta">
+    Browse the demo articles
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M8 1l7 7-7 7M1 8h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+    </svg>
+  </a>
+</section>
+
+<!-- ── How it works ── -->
+<section class="how" id="how-it-works">
+  <div class="how-inner">
+    <div class="section-label">The attack explained</div>
+    <h2>Indirect prompt injection in 4 steps</h2>
+    <p>
+      A user asks their AI assistant to summarise a webpage. The page looks normal.
+      But hidden in the HTML is an instruction the LLM will follow.
+    </p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Attacker plants a payload</h3>
+        <p>Malicious instructions are embedded in a webpage — white text on white background, a 1px font, or a clipped div invisible to human readers.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>User asks the AI to summarise</h3>
+        <p>A real user sends a legitimate request: "Summarise this article for me." The AI fetches or receives the page content.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>LLM sees the hidden text</h3>
+        <p>The text extractor includes all text regardless of CSS visibility. The LLM reads the injected instructions alongside the real content.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Guardrail blocks — or it doesn't</h3>
+        <p>With a guardrail agent in place, the injection is detected before the LLM processes it. Without one, the AI follows the attacker's instructions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Articles ── -->
+<section class="articles" id="articles">
+  <div class="articles-header">
+    <div class="section-label">Demo pages</div>
+    <h2>Three articles — three outcomes</h2>
+    <p>Each page is a realistic-looking article. Fetch any of them through the Guardrail demo to see the scanner in action.</p>
+  </div>
+
+  <div class="card-grid">
+
+    <!-- Tech Article — safe -->
+    <a class="card" href="tech-article.html" target="_blank" rel="noopener">
+      <div class="card-thumb thumb-tech">🤖</div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="verdict-tag verdict-safe">✓ pass</span>
+          <span class="card-source-tag">TechPulse</span>
+        </div>
+        <h3>The Rise of AI Agents in Enterprise Software</h3>
+        <p>A clean technology article with no injection payload. Guardrail passes it through — the LLM summarises it normally.</p>
+      </div>
+      <div class="card-footer">
+        <span>8 min read · Marcus Webb</span>
+        <span class="read-link">Read
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Blog Post — blocked -->
+    <a class="card" href="blog-post.html" target="_blank" rel="noopener">
+      <div class="card-thumb thumb-blog">📝</div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="verdict-tag verdict-block">✕ block</span>
+          <span class="card-source-tag">Momentum Blog</span>
+        </div>
+        <h3>5 Productivity Hacks That Actually Work</h3>
+        <p>A productivity article with a canonical injection payload hidden in a 1×1 px clipped div — invisible to you, verbatim for the LLM. Guardrail blocks it.</p>
+      </div>
+      <div class="card-footer">
+        <span>6 min read · Jordan Mills</span>
+        <span class="read-link">Read
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Newsletter — flagged -->
+    <a class="card" href="newsletter.html" target="_blank" rel="noopener">
+      <div class="card-thumb thumb-finance">📈</div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="verdict-tag verdict-flag">⚠ flag</span>
+          <span class="card-source-tag">Market Watch Weekly</span>
+        </div>
+        <h3>Market Watch Weekly — AI Sector Update</h3>
+        <p>A finance newsletter with a subtle injection in 1px near-white text — styled to look like blank space. Below the block threshold, but Guardrail flags it.</p>
+      </div>
+      <div class="card-footer">
+        <span>5 min read · Issue 47</span>
+        <span class="read-link">Read
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ── Info banner ── -->
+<div class="info-banner">
+  <div class="info-inner">
+    <span class="info-icon">ℹ️</span>
+    <div>
+      <strong>Educational use only.</strong> These pages are published to demonstrate the indirect prompt injection attack vector for security research and AI safety awareness. The injection payloads use fictional domains (<code>attacker-exfil.example.com</code>) and are harmless. The HTML source of each page includes a comment explaining the technique. See <a href="https://arxiv.org/abs/2302.12173" target="_blank" rel="noopener" style="color:#1d4ed8;">Greshake et al. 2023</a> for the original research.
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div>© 2026 VKSHx · AI Security Research</div>
+  <div class="footer-links">
+    <a href="https://github.com/VKSHx" target="_blank" rel="noopener">GitHub</a>
+    <a href="tech-article.html">Clean article</a>
+    <a href="blog-post.html">Poisoned blog</a>
+    <a href="newsletter.html">Subtle injection</a>
+  </div>
+</footer>
+
+</body>
+</html>
