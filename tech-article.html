@@ -1,27 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="utf-8"><title>The Rise of AI Agents in Enterprise Software</title></head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Rise of AI Agents in Enterprise Software</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: #f9f7f4;
+      color: #1a1a1a;
+      line-height: 1.7;
+    }
+
+    /* ── Nav ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 56px;
+      background: #fff;
+      border-bottom: 1px solid #e8e4de;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav-brand { font-weight: 700; font-size: 1.1rem; color: #111; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { font-size: 0.85rem; color: #555; text-decoration: none; }
+    .nav-links a:hover { color: #111; }
+    .nav-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e8f0fe;
+      color: #1a56db;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0e4d92 100%);
+      color: #fff;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-family: "Lora", Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 600;
+      line-height: 1.25;
+      max-width: 720px;
+      margin: 0 auto 1.5rem;
+      letter-spacing: -0.02em;
+    }
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+    }
+    .hero-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.4); }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; color: #fff;
+    }
+
+    /* ── Article ── */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 5rem;
+    }
+
+    .lead {
+      font-family: "Lora", Georgia, serif;
+      font-size: 1.2rem;
+      line-height: 1.65;
+      color: #333;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid #e8e4de;
+    }
+
+    p { margin-bottom: 1.5rem; font-size: 1rem; color: #2c2c2c; }
+
+    h2 {
+      font-family: "Lora", Georgia, serif;
+      font-size: 1.45rem;
+      font-weight: 600;
+      color: #111;
+      margin: 2.5rem 0 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .pullquote {
+      border-left: 3px solid #1a56db;
+      padding: 1rem 1.5rem;
+      margin: 2.5rem 0;
+      background: #f0f4ff;
+      border-radius: 0 8px 8px 0;
+      font-family: "Lora", Georgia, serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: #1e3a5f;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 2.5rem 0;
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid #e8e4de;
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .stat-number { font-size: 1.8rem; font-weight: 700; color: #1a56db; }
+    .stat-label { font-size: 0.78rem; color: #888; margin-top: 4px; }
+
+    .tag-list { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 3rem; }
+    .tag {
+      font-size: 0.75rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: #f0f0f0;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      border-top: 1px solid #e8e4de;
+    }
+  </style>
+</head>
 <body>
-<article>
-<h1>The Rise of AI Agents in Enterprise Software</h1>
-<p class="byline">By Marcus Webb · May 2026</p>
-<p>Enterprise software is quietly undergoing its most significant transformation in two decades.
-AI agents — autonomous systems capable of planning, reasoning, and taking actions — are moving
-from research labs into production workflows at Fortune 500 companies.</p>
-<p>Unlike traditional automation, which follows rigid scripts, AI agents can adapt to changing
-contexts, handle ambiguous inputs, and orchestrate multi-step tasks across disparate systems.
-A legal firm in Boston uses an agent to review contracts overnight, surfacing anomalies by
-morning. A logistics company in Hamburg has agents monitoring thousands of shipments in real
-time, proactively rerouting when delays are detected.</p>
-<p>The economic case is compelling. Analysts estimate that AI agents could automate 30–40% of
-white-collar knowledge work by 2028, with the highest impact in finance, legal, and operations.</p>
-<p>But adoption is not without friction. Security teams worry about agents with broad
-permissions. Compliance departments want audit trails for every automated decision. And
-engineers who built the existing systems are often the last to know when an agent has been
-given access to them.</p>
-<p>The companies moving fastest are not the ones with the most data or the largest AI budgets.
-They are the ones that started small — one agent, one workflow, one measured result — and
-built institutional trust before scaling.</p>
-</article>
+
+<nav>
+  <span class="nav-brand">TechPulse</span>
+  <div class="nav-links">
+    <a href="#">AI</a>
+    <a href="#">Enterprise</a>
+    <a href="#">Research</a>
+    <span class="nav-tag">AI</span>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">Enterprise Technology · Deep Dive</div>
+  <h1>The Rise of AI Agents in Enterprise Software</h1>
+  <div class="hero-meta">
+    <div class="avatar">MW</div>
+    <span>Marcus Webb</span>
+    <div class="dot"></div>
+    <span>May 14, 2026</span>
+    <div class="dot"></div>
+    <span>8 min read</span>
+  </div>
+</div>
+
+<div class="container">
+  <p class="lead">
+    Enterprise software is quietly undergoing its most significant transformation in two decades.
+    AI agents — autonomous systems capable of planning, reasoning, and taking actions — are moving
+    from research labs into production workflows at Fortune 500 companies.
+  </p>
+
+  <p>
+    Unlike traditional automation, which follows rigid scripts, AI agents can adapt to changing
+    contexts, handle ambiguous inputs, and orchestrate multi-step tasks across disparate systems.
+    A legal firm in Boston uses an agent to review contracts overnight, surfacing anomalies by
+    morning. A logistics company in Hamburg has agents monitoring thousands of shipments in real
+    time, proactively rerouting when delays are detected.
+  </p>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-number">40%</div>
+      <div class="stat-label">of knowledge work automatable by 2028</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">3×</div>
+      <div class="stat-label">faster task completion vs. traditional RPA</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">$4.1T</div>
+      <div class="stat-label">projected enterprise AI market by 2030</div>
+    </div>
+  </div>
+
+  <h2>The economic case is hard to ignore</h2>
+  <p>
+    Analysts estimate that AI agents could automate 30–40% of white-collar knowledge work by 2028,
+    with the highest impact in finance, legal, and operations. But the real value is not in
+    replacement — it's in augmentation. Agents handle the routine; humans handle the judgment calls.
+  </p>
+
+  <div class="pullquote">
+    "The companies moving fastest are not the ones with the most data or the largest AI budgets.
+    They are the ones that started small — one agent, one workflow, one measured result."
+  </div>
+
+  <h2>Where adoption stalls</h2>
+  <p>
+    Security teams worry about agents with broad permissions. Compliance departments want audit
+    trails for every automated decision. And engineers who built the existing systems are often
+    the last to know when an agent has been given access to them.
+  </p>
+  <p>
+    The trust problem is real. An agent that can send emails, query databases, and trigger
+    financial transactions requires a level of governance that most enterprise security stacks
+    were not built to provide. Prompt injection — where malicious instructions embedded in
+    third-party content hijack an agent's actions — has moved from a theoretical concern to
+    a documented attack vector in production systems.
+  </p>
+
+  <h2>What good looks like</h2>
+  <p>
+    The best deployments share three traits: narrow scope (the agent does one thing well),
+    human-in-the-loop escalation (it asks before acting on anything irreversible), and
+    full observability (every decision is logged with the inputs that caused it).
+  </p>
+  <p>
+    Building institutional trust takes time. But the companies that do it carefully now will
+    have a durable advantage over those who either move too fast and break trust, or move too
+    slowly and fall behind entirely.
+  </p>
+
+  <div class="tag-list">
+    <span class="tag">AI Agents</span>
+    <span class="tag">Enterprise</span>
+    <span class="tag">Automation</span>
+    <span class="tag">LLM Security</span>
+    <span class="tag">Prompt Injection</span>
+  </div>
+</div>
+
+<footer>© 2026 TechPulse — For demonstration purposes only</footer>
+
 </body>
 </html>
